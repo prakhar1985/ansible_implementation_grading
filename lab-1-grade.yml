@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: false
+  tasks:
+  - name: Verify devops user is created
+    shell: "grep devops /etc/passwd | cut -d: -f1"
+    register: output
+  - debug:
+      msg: "Success: devops user present"
+    when: output.stdout == "devops"
+  - fail:
+      msg: "FAILED: User devops not present"
+    when: output.stdout != "devops"
+  - name: Verify /etc/motd has content
+    shell: "cat /etc/motd"
+    register: motd
+  - debug: 
+      msg: "Success: /etc/motd has required content"
+    when: motd.stdout == "Managed by Ansible"
+  - fail:
+      msg: "FAILED: /etc/motd does not have required content"
+    when: motd.stdout != "Managed by Ansible"
