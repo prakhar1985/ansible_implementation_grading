@@ -1,0 +1,42 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+- hosts: webservers
+  become: yes
+  tasks:
+  - name: Gather Facts
+    setup:
+      filter: ansible_local
+    register: custom_facts
+  - name: Success if custom facts setup correctly
+    debug:
+      msg: "Success: custom facts setup correctly."
+    when: 
+      - custom_facts.ansible_facts.ansible_local.custom.general.package == "httpd"
+      - custom_facts.ansible_facts.ansible_local.custom.general.service == "httpd"
+      - custom_facts.ansible_facts.ansible_local.custom.general.state == "started"
+    ignore_errors: yes
+  - name: Fail if custom facts are incorrect
+    fail:
+      msg: "Success: custom facts are not setup correctly."
+    when: 
+      - custom_facts.ansible_facts.ansible_local.custom.general.package != "httpd"
+      - custom_facts.ansible_facts.ansible_local.custom.general.service != "httpd"
+      - custom_facts.ansible_facts.ansible_local.custom.general.state != "started"
+    ignore_errors: yes
+     
+  - name: Check httpd service status
+    shell: systemctl status httpd
+    register: status
+    ignore_errors: yes
+  - name: Success if httpd is started
+    debug: 
+      msg: "Success: httpd service is started."
+    when: "'Active: active (running)' in status.stdout_lines[2]"
+    ignore_errors: yes
+  - name: Fail if httpd service is not started
+    fail:
+      msg: "FAILED: httpd service is not started"
+    when: "'Active: active (running)' not in status.stdout_lines[2]" 
+    ignore_errors: yes

@@ -1,0 +1,16 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+
+- hosts: webservers
+  become: yes
+  tasks:
+  - name: Delete Custom facts
+    file:
+      path: /etc/ansible/facts.d/custom.fact
+      state: absent
+  - name: Remove httpd 
+    yum:
+      name: httpd
+      state: absent

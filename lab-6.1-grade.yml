@@ -1,0 +1,17 @@
+- hosts: localhost
+  roles:
+    - inventory
+
+
+- hosts: lb
+  gather_facts: false
+  tasks:
+  - name: Verify devops user is created
+    shell: "grep ansibleuser* /etc/passwd | cut -d: -f1"
+    register: output
+  - debug:
+      msg: "Success: users present"
+    when: output.stdout == "ansibleuser1\nansibleuser2"
+  - fail:
+      msg: "FAILED: User users not present"
+    when: output.stdout != "ansibleuser1\nansibleuser2"
