@@ -1,0 +1,20 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+
+- hosts: webservers
+  become: yes
+  tasks:
+  - name: Delete index.html
+    file:
+      path: /var/www/html/index.html
+      state: absent
+  - name: Remove httpd 
+    yum:
+      name: httpd
+      state: absent
+  - name: Remove firewalld rule
+    firewalld:
+      service: http
+      state: disabled

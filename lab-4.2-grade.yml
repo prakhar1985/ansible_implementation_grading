@@ -1,0 +1,57 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+  - name: Check that "environment.yml" playbook is present.
+    stat:
+     path: /home/devops/ansible_implementation/tasks/environment.yml
+    register: env
+  - name: Fail if "environment.yml" playbook is not present
+    fail:
+     msg: "environment.yml playbook is not present"
+    when: not env.stat.exists
+  - name: Success if "environment.yml" playbook is present
+    debug:
+     msg: "environment.yml playbook is present"
+    when: env.stat.exists
+
+  - name: Check that "variables.yml" playbook is present.
+    stat:
+     path: /home/devops/ansible_implementation/vars/variables.yml
+    register: var
+  - name: Fail if "variables.yml" playbook is not present
+    fail:
+     msg: "variables.yml is not present"
+    when: not var.stat.exists
+  - name: Success if "variables.yml" playbook is present
+    debug:
+     msg: "variables.yml file is present"
+    when: var.stat.exists
+
+  - name: Check that "main_playbook.yml" playbook is present.
+    stat:
+     path: /home/devops/ansible_implementation/main_playbook.yml
+    register: main_play
+  - name: Fail if "main_playbook.yml" playbook is not present
+    fail:
+     msg: "main_playbook.yml is not present"
+    when: not main_play.stat.exists
+  - name: Success if "main_playbook.yml" playbook is present
+    debug:
+     msg: "main_playbook.yml file is present"
+    when: main_play.stat.exists
+
+  - name: Run a Curl Test against Frontend
+    uri:
+     url: http://{{ item }}
+     return_content: yes
+    with_items: "{{ groups['webservers'] }}"
+    register: webpage
+  - name: Fail if 'has been customized using Ansible' is not in the page content
+    fail:
+      msg: "FAILED: Webpage is not having correct content"
+    when: "'has been customized using Ansible' not in webpage.results[0].content"
+  - name: Success if 'has been customized using Ansible' is in the page content
+    debug: 
+      msg: "Success: All requirements completed."
+    when: "'has been customized using Ansible' in webpage.results[0].content"

@@ -1,0 +1,18 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+  - name: Run a Curl Test against Frontend
+    uri:
+     url: http://{{ item }}
+     return_content: yes
+    with_items: "{{ groups['webservers'] }}"
+    register: webpage
+  - name: Fail if 'Example web content' is not in the page content
+    fail:
+      msg: "FAILED: Webpage is not having correct content"
+    when: "'Example web content' not in webpage.results[0].content"
+  - name: Success if 'Example web content' is in the page content
+    debug: 
+      msg: "Success: All requirements completed."
+    when: "'Example web content' in webpage.results[0].content"
