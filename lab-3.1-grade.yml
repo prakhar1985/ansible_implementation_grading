@@ -8,11 +8,11 @@
      return_content: yes
     with_items: "{{ groups['webservers'] }}"
     register: webpage
-  - name: Success if 'Hoorraaayyy!!! My first playbook ran successfully' is in the page content
-    debug: 
-      msg: "Success: All requirements completed."
-    when: "'Hoorraaayyy!!! My first playbook ran successfully' in webpage.results[0].content"
   - name: Fail if 'Hoorraaayyy!!! My first playbook ran successfully' is not in the page content
     fail:
       msg: "FAILED: Webpage is not having correct content"
     when: "'Hoorraaayyy!!! My first playbook ran successfully' not in webpage.results[0].content"
+  - name: Success if 'Hoorraaayyy!!! My first playbook ran successfully' is in the page content
+    debug: 
+      msg: "Success: All requirements completed."
+    when: "'Hoorraaayyy!!! My first playbook ran successfully' in webpage.results[0].content"
