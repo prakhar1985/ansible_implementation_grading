@@ -1,2 +1,17 @@
 ---
 # tasks file for roles-setup
+#
+- name: Create roles-setup-dir
+  file:
+   path: /home/devops/roles-setup-files
+   state: directory
+
+- name: Copy all the files
+  copy:
+   src: "{{ item }}"
+   dest: /home/devops/roles-setup-files/
+  loop:
+   - index.j2
+   - haproxy.j2
+   - userdb.backup
+   - vhost.conf.j2 

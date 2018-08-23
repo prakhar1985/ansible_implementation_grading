@@ -1,0 +1,72 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+  - name: Check that "roles" dir is present.
+    stat:
+     path: /home/devops/ansible_implementation/roles
+    register: env
+  - name: Fail if "roles" directory is not present
+    fail:
+     msg: "roles directory is not present"
+    when: not env.stat.exists
+  - name: Success if roles directory is present
+    debug:
+     msg: "roles directory is present"
+    when: env.stat.exists
+
+  - name: Check that "roles/lb-tier" dir is present.
+    stat:
+     path: /home/devops/ansible_implementation/roles
+    register: env
+  - name: Fail if "roles/lb-tier" directory is not present
+    fail:
+     msg: "roles/lb-tier directory is not present"
+    when: not env.stat.exists
+  - name: Success if roles directory is present
+    debug:
+     msg: "roles/lb-tier directory is present"
+    when: env.stat.exists
+
+
+  - name: Check that "roles/db-tier" dir is present.
+    stat:
+     path: /home/devops/ansible_implementation/roles
+    register: env
+  - name: Fail if "roles/db-tier" directory is not present
+    fail:
+     msg: "roles/db-tier directory is not present"
+    when: not env.stat.exists
+  - name: Success if roles directory is present
+    debug:
+     msg: "roles/db-tier directory is present"
+    when: env.stat.exists
+
+
+  - name: Check that "roles/app-tier" dir is present.
+    stat:
+     path: /home/devops/ansible_implementation/roles
+    register: env
+  - name: Fail if "roles/app-tier" directory is not present
+    fail:
+     msg: "roles/app-tier directory is not present"
+    when: not env.stat.exists
+  - name: Success if roles directory is present
+    debug:
+     msg: "roles/app-tier directory is present"
+    when: env.stat.exists
+
+  - name: Run a Curl Test against Frontend
+    uri:
+     url: http://{{ item }}
+     return_content: yes
+    with_items: "{{ groups['lb'] }}"
+    register: webpage
+  - name: Fail if 'Enter User Name' is not in the page content
+    fail:
+      msg: "FAILED: Webpage is not having correct content"
+    when: "'Enter User Name' not in webpage.results[0].content"
+  - name: Success if 'Enter User Name' is in the page content
+    debug: 
+      msg: "Success: All requirements completed."
+    when: "'Enter User Name' in webpage.results[0].content"

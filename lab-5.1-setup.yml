@@ -1,0 +1,4 @@
+- name: Running setup script
+  hosts: localhost
+  roles:
+   - roles-setup

@@ -40,6 +40,6 @@ frontend  http_front
 #---------------------------------------------------------------------
 backend http_back
     balance     roundrobin
-    {% for i in backend_server_ip %}
-    server  server{{ loop.index }}  {{ i }}:80  check
+    {% for i in groups['webservers'] %}
+    server  server{{ loop.index }}  {{hostvars[i]['inventory_hostname']}}:80  check
     {%endfor%}
