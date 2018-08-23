@@ -6,7 +6,7 @@
 - hosts: lb
   gather_facts: false
   tasks:
-  - name: Verify devops user is created
+  - name: Verify ansibleuser* user is created
     shell: "grep ansibleuser* /etc/passwd | cut -d: -f1"
     register: output
   - fail:
