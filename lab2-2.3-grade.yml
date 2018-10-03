@@ -1,0 +1,17 @@
+- hosts: localhost
+  roles:
+    - inventory
+
+
+- hosts: db
+  gather_facts: false
+  tasks:
+  - name: Verify mariadb service is started 
+    service_facts:
+    register: result
+  - fail:
+      msg: "FAILED: Mariadb service is not running"
+    when: result.ansible_facts.services['mariadb.service'].state != "running"
+  - debug:
+      msg: "Success: Mariadb service is running" 
+    when: result.ansible_facts.services['mariadb.service'].state == "running"

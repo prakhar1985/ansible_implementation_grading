@@ -1,0 +1,25 @@
+---
+# tasks file for roles/setup-part2
+- name: Create directory
+  file:
+    path: /home/devops/ansible_implementation
+    state: directory
+    owner: devops
+    group: devops
+    mode: 0755
+
+- name: Inventory file setup
+  template:
+    src: hosts.j2
+    dest: /home/devops/ansible_implementation/hosts
+    force: yes
+
+- name: Copy ansible.cfg
+  copy:
+    src: ansible.cfg
+    dest: /home/devops/ansible_implementation/ansible.cfg
+
+- name: Extract setup files
+  unarchive:
+    src: lab2-files.tar.gz
+    dest: /home/devops

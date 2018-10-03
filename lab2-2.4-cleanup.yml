@@ -1,0 +1,23 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+
+- hosts: webservers
+  become: yes
+  tasks:
+  - name: Delete files
+    file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+     - /etc/httpd/conf.d/https.conf
+     - /etc/httpd/conf.d/ssl/server.crt
+     - /etc/httpd/conf.d/ssl/server.csr
+     - /etc/httpd/conf.d/ssl/server.key
+  - name: Remove httpd
+    yum:
+      name: "{{ item }}"
+      state: absent
+    loop:
+     - httpd

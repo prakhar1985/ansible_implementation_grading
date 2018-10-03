@@ -1,0 +1,20 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: inventory
+
+- hosts: db
+  become: yes
+  tasks:
+  - name: Delete my.cnf
+    file:
+      path: /etc/my.cnf
+      state: absent
+  - name: Remove mariadb
+    yum:
+      name: "{{ item }}"
+      state: absent
+    loop:
+     - mariadb-bench
+     - mariadb-test
+     - mariadb-libs
