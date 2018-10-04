@@ -1,0 +1,18 @@
+---
+# tasks file for roles/setup-part2
+
+- name: Extract setup files
+  unarchive:
+    src: lab3-files.tar.gz
+    dest: /home/devops
+- name: Inventory file setup
+  template:
+    src: hosts.j2
+    dest: /home/devops/ansible_implementation/hosts
+    force: yes
+- name: Create html directory
+  file:
+   path: /home/devops/ansible_implementation/html
+   state: directory
+   owner: devops
+   group: devops
