@@ -3,7 +3,7 @@
   - include_role:
       name: inventory
 
-- hosts: webservers
+- hosts: webserver
   become: yes
   tasks:
   - name: Delete files
@@ -11,11 +11,8 @@
       path: "{{ item }}"
       state: absent
     loop:
-     - /etc/httpd/conf.d/https.conf
-     - /etc/httpd/conf.d/ssl/server.crt
-     - /etc/httpd/conf.d/ssl/server.csr
-     - /etc/httpd/conf.d/ssl/server.key
-     - /var/www/html/index.html
+     - /etc/httpd/conf.d/vhosts.conf
+     - /var/www/vhosts/app1-secure/
   - name: Remove httpd
     yum:
       name: "{{ item }}"
