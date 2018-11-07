@@ -1,0 +1,18 @@
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Create inventory directory
+    file:
+     path: /home/devops/ansible_implementation/inventory_lab6
+     state: directory
+     owner: devops
+     group: devops
+     mode: 0775
+  - name: Create template directory
+    file:
+     path: /home/devops/ansible_implementation/templates
+     state: directory
+     owner: devops
+     group: devops
+     mode: 0775
+    
