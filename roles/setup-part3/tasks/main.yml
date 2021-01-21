@@ -15,4 +15,4 @@
    path: /home/devops/ansible_implementation/html
    state: directory
    owner: devops
-   group: devops
+   group: users
