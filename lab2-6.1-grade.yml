@@ -15,7 +15,7 @@
 - hosts: samba_servers
   gather_facts: false
   tasks:
-  - name: Check the file on support1
+  - name: Check the file on samba server
     shell: "grep connection_type /tmp/{{ inventory_hostname }}"
     register: output
   - fail:
